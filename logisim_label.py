@@ -1,18 +1,19 @@
 import string
+import sys
+
 
 class Labeler():
-    def __init__(self):
-        self.labels = self.make_label(10, "single", letter="s")
+    def __init__(self, component, number, pattern, letter):
+        self.labels = self.make_label(int(number), pattern, letter)
         self.output = open("labelOutput.circ", "wt")
+        self.comp = component
         
         self.x_initial = 100
         self.y_initial = 100
         self.x_change = 40
         self.y_change = 0
-        
-        self.main()
 
-    def make_label(self, number, pattern, letter=None):
+    def make_label(self, number, pattern, letter):
         label_list = []
         if pattern == "single":
             for i in range(number):
@@ -57,11 +58,15 @@ class Labeler():
             lines = f.readlines()
             self.output.writelines(lines)
         
-        self.write("out")
+        self.write(self.comp)
         
         self.output.write("\n  </circuit>\n</project>")
         self.output.close()
 
 if __name__ == "__main__":
-    Labeler()
+    comp = sys.argv[1]
+    num = sys.argv[2]
+    pattern = sys.argv[3]
+    letter = None if pattern != "single" else sys.argv[4]
+    Labeler(comp, num, pattern, letter).main()
     
